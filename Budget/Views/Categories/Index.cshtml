@@ -1,0 +1,77 @@
+﻿@model IEnumerable<Budget.Models.Category>
+@using Budget.Models
+
+
+@{
+    ViewBag.Title = "Index";
+
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        var thisCategoryID = this.Url.Action("Create", "SubCategories", new { CategoryID = item.ID }, this.Request.Url.Scheme);
+        
+            <tr data-toggle="collapse" data-parent="#accordion" href="#@item.ID">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.ID }) |
+                    <a href="@thisCategoryID">Create SubCategory</a>
+                </td>
+            </tr>
+
+
+
+        BudgetDbContext db = new BudgetDbContext();
+        List<SubCategory> subcategories = db.SubCategories.Where(i => i.Category_ID == item.ID).ToList();
+        <table id="@item.ID" class="table panel-collapse collapse" style="background-color:#c8c8c8;color:black">
+            @foreach (var s in subcategories)
+            {
+
+            <tr>
+
+                <td>
+                    @Html.DisplayFor(modelItem => s.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => s.Description)
+                </td>
+                <td style="background-color:#c8c8c8;color:black">
+                    @Html.ActionLink("Edit", "Edit", new { id = s.ID }) |
+                    @Html.ActionLink("Details", "Details", new { id = s.ID }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = s.ID }) |
+
+                </td>
+            </tr>
+
+            }
+        </table>
+
+
+    }
+
+</table>
+
